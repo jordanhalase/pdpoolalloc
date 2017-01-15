@@ -1,6 +1,6 @@
 #include <stddef.h>
 
-struct Object{
+struct Object {
 	struct Object *next, *prev;
 	int value;
 };
@@ -12,7 +12,9 @@ struct Pool {
 	struct Object objects[POOL_SIZE];
 };
 
-/* This can be used to empty the pool,
+/* O(n) computation
+ *
+ * This can be used to empty the pool,
  * but not if any object allocates its own memory
  */
 void pool_init(struct Pool *pool)
@@ -43,7 +45,10 @@ int pool_population(struct Pool *pool)
 	return population;
 }
 
-/* Can return NULL if full and stealing is not enabled */
+/* O(1) computation
+ *
+ * Can return NULL if full and stealing is not enabled
+ */
 struct Object *obj_new(struct Pool *pool)
 {
 	struct Object *obj;
@@ -82,7 +87,10 @@ struct Object *obj_new(struct Pool *pool)
 	return obj;
 }
 
-/* Remember to deallocate any memory allocated by the object before freeing */
+/* O(1) computation
+ *
+ * Remember to deallocate any memory allocated by the object before freeing
+ */
 void obj_free(struct Pool *pool, struct Object *obj)
 {
 	if (obj->prev) {
