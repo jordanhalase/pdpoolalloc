@@ -78,7 +78,6 @@ void obj_free(struct Pool *pool, struct Object *obj)
  */
 struct Object *obj_new(struct Pool *pool)
 {
-	struct Object *obj;
 	if (!pool->firstfree) {
 		return NULL;
 
@@ -87,7 +86,7 @@ struct Object *obj_new(struct Pool *pool)
 		 */
 		/*obj_free(pool, pool->first);*/
 	}
-	obj = pool->firstfree;
+	struct Object *obj = pool->firstfree;
 	pool->firstfree = pool->firstfree->next;
 	if (obj == pool->lastfree) {
 		pool->lastfree = NULL;
