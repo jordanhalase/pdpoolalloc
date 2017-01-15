@@ -23,15 +23,11 @@ void pool_init(struct Pool *pool)
 	pool->last = NULL;
 	pool->firstfree = &pool->objects[0];
 	pool->lastfree = &pool->objects[POOL_SIZE-1];
-	if (POOL_SIZE < 2) {
-		pool->objects[0].next = NULL;
-	} else {
-		int i;
-		for (i = 0; i < POOL_SIZE-1; ++i) {
-			pool->objects[i].next = &pool->objects[i+1];
-		}
-		pool->objects[i].next = NULL;
+	int i = 0;
+	for (; i < POOL_SIZE-1; ++i) {
+		pool->objects[i].next = &pool->objects[i+1];
 	}
+	pool->objects[i].next = NULL;
 }
 
 /* O(n) computation */
