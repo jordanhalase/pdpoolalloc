@@ -43,50 +43,6 @@ int pool_population(struct Pool *pool)
 
 /* O(1) computation
  *
- * Be aware of initial cruft
- *
- * Can return NULL if full and stealing is not enabled
- */
-struct Object *obj_new(struct Pool *pool)
-{
-	struct Object *obj;
-	if (pool->firstfree) {
-		obj = pool->firstfree;
-		pool->firstfree = pool->firstfree->next;
-	} else {
-		return NULL;
-
-		/* Steal the first object,
-		 * remember to deallocate any memory allocated by the object
-		 */
-		/*
-		 *obj = pool->first;
-		 *if (obj->prev) {
-		 *        obj->prev = pool->last;
-		 *}
-		 *if (obj->next) {
-		 *        pool->first = obj->next;
-		 *        obj->next->prev = NULL;
-		 *}
-		 */
-	}
-	if (obj == pool->lastfree) {
-		pool->lastfree = NULL;
-	}
-	obj->prev = pool->last;
-	if (!pool->first) {
-		pool->first = obj;
-	}
-	if (pool->last) {
-		pool->last->next = obj;
-	}
-	pool->last = obj;
-	obj->next = NULL;
-	return obj;
-}
-
-/* O(1) computation
- *
  * Remember to deallocate any memory allocated by the object before freeing
  */
 void obj_free(struct Pool *pool, struct Object *obj)
@@ -112,6 +68,40 @@ void obj_free(struct Pool *pool, struct Object *obj)
 	}
 	pool->lastfree = obj;
 	obj->next = NULL;
+}
+
+/* O(1) computation
+ *
+ * Be aware of initial cruft
+ *
+ * Can return NULL if full and stealing is not enabled
+ */
+struct Object *obj_new(struct Pool *pool)
+{
+	struct Object *obj;
+	if (!pool->firstfree) {
+		return NULL;
+
+		/* Steal the first object,
+		 * remember to deallocate any memory allocated by the object
+		 */
+		/*obj_free(pool, pool->first);*/
+	}
+	obj = pool->firstfree;
+	pool->firstfree = pool->firstfree->next;
+	if (obj == pool->lastfree) {
+		pool->lastfree = NULL;
+	}
+	obj->prev = pool->last;
+	if (!pool->first) {
+		pool->first = obj;
+	}
+	if (pool->last) {
+		pool->last->next = obj;
+	}
+	pool->last = obj;
+	obj->next = NULL;
+	return obj;
 }
 
 #include <stdio.h>
