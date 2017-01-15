@@ -4,3 +4,5 @@
 Hard real-time safe by default. Ensure to deallocate any memory allocated by your objects if you do so.
 
 Also has the ability to steal objects if the pool is full, which is useful for synthesizer voice allocation.
+
+Written by Jordan Halase. Credit is not required, although would be appreciated.

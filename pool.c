@@ -47,6 +47,8 @@ int pool_population(struct Pool *pool)
 
 /* O(1) computation
  *
+ * Be aware of initial cruft
+ *
  * Can return NULL if full and stealing is not enabled
  */
 struct Object *obj_new(struct Pool *pool)
