@@ -12,6 +12,8 @@ Also has the ability to steal objects if the pool is full, which is useful for s
 ## How to use
 You modify the source code and incorporate it into your project. This project is nothing more than a starting template, as the correctness of building an object pool from scratch is difficult to determine.
 
+You should never modify an object's `next` or `prev` pointers. They are maintained by the pool.
+
 Iterating the pool is easy. It is a doubly linked list.
 ```c
 struct Object *elem;
@@ -31,7 +33,7 @@ for (elem = pool->first; elem; elem = next) {
 }
 ```
 
-You can risk memory leaks or corrupted state if you use an object after you freed it back into the pool. It is good practice to set every object to `NULL` after freeing it. (We did not set elem to `NULL` in the above for() loop because it was an iterator and no other code was written after it was freed.)
+You can risk memory leaks or corrupted state if you use an object after you freed it back into the pool. It is good practice to set every object to `NULL` after freeing it.
 
 ```c
 /* obj->destroy(obj); */
