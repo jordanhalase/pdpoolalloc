@@ -16,7 +16,7 @@ Iterating the pool is easy. It is a doubly linked list.
 ```c
 struct Object *elem;
 for (elem = pool->first; elem; elem = elem->next) {
-	/* Do things with elem except for freeing it */
+	/* Do things with elem except for calling obj_free() on it */
 }
 ```
 
@@ -26,8 +26,16 @@ struct Object *elem, *next;
 for (elem = pool->first; elem; elem = next) {
 	next = elem->next;
 	/* elem->destroy(elem); */
-	obj_free(elem);
+	obj_free(pool, elem);
 	/* elem->next is lost after call to obj_free() */
 }
+```
+
+You can risk memory leaks or corrupted state if you use an object after you freed it back into the pool. It is good practice to set every object to `NULL` after freeing it. (We did not set elem to `NULL` in the above for() loop because it was an iterator and no other code was written after it was freed.)
+
+```c
+/* obj->destroy(obj); */
+obj_free(pool, obj);
+obj = NULL;
 ```
 
