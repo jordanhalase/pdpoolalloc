@@ -14,7 +14,7 @@ You modify the source code and incorporate it into your project. This project is
 
 You should never modify an object's `next` or `prev` pointers. They are maintained by the pool.
 
-Iterating the pool is easy. It is a doubly linked list.
+Iterating the pool is easy. It is a doubly, but not circularly, linked list.
 ```c
 struct Object *elem;
 for (elem = pool->first; elem; elem = elem->next) {
